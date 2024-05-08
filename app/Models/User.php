@@ -10,7 +10,8 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-
+    public $keyType = 'string';
+    public $incrementing = false;
     /**
      * The attributes that are mass assignable.
      *
@@ -43,5 +44,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = (string) uniqid("usr_");
+        });
     }
 }
